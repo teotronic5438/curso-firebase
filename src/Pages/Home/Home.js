@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Login from '../../Components/Form/Login';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Datos from '../../Components/Table/Datos';
+import HomeAdd from '../../Components/Form/HomeAdd';
+
+// Funcionalidad principal, mostrarnos el tema del login
+// COn un estado veremos si esta logeado o no
 
 const Home = () => {
+  const [usuario, setUsuario] = useState(null);
+  // Podra tener valor en algun futuro, el homeAdd tendra la info que creamos
+
   return (
     <Container className='my-2'>
-        <Row xs={1} md={2} className="g-4">
-            <Col>
-                <Login />
-            </Col>
-            <Col>
-                <Datos />
-            </Col>
-        </Row>
-
+        {usuario ? <HomeAdd /> : <Login /> }
     </Container>
   )
 }
