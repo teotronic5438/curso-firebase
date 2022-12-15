@@ -2,12 +2,12 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-export default function FormLogin({registro}) {
+export default function FormLogin({registro, handleSubmit}) {
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Ingresar Email" />
+            <Form.Control type="email" placeholder="Ingresar Email" required  name='email'/>
             <Form.Text className="text-muted">
                 El correo que uso durante su registro.
             </Form.Text>
@@ -15,7 +15,7 @@ export default function FormLogin({registro}) {
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Ingresar Password" />
+            <Form.Control type="password" placeholder="Ingresar Password" required name='contrasena'/>
         </Form.Group>
 
         <Button variant={registro ? "primary" : "success"} type="submit">
