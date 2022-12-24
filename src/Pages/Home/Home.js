@@ -10,7 +10,7 @@ import HomeAdd from '../../Components/Form/HomeAdd';
 // Objetivo: sabers si esyamos authenticados o no.  EN APP.JS o bien HOME.JS
 import app from '../../Firebase/FirebaseApp';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
-// onAuthStateChanged: este nos va a permitir el etsado de la app, si esta logeado o no.
+// onAuthStateChanged: este nos va a permitir identificar el etsado de la app, si esta logeado o no.
 
 const auth = getAuth(app);
 

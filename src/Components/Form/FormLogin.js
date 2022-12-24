@@ -16,6 +16,9 @@ export default function FormLogin({registro, handleSubmit}) {
         <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Ingresar Password" required name='contrasena'/>
+            <Form.Text className="text-muted">
+                Contraseña minima de seis caracteres.
+            </Form.Text>
         </Form.Group>
 
         <Button variant={registro ? "primary" : "success"} type="submit">
