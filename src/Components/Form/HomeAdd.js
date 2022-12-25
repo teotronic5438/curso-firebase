@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Datos from '../../Components/Table/Datos';
@@ -7,10 +7,34 @@ import Datos from '../../Components/Table/Datos';
 import app from "../../Firebase/FirebaseApp";
 import {getAuth, signOut} from 'firebase/auth';
 import { Button } from 'react-bootstrap';
+import { async } from '@firebase/util';
 
 const auth = getAuth(app);
 
 const HomeAdd = ({correoUsuario}) => {
+
+  const valorInicial = {
+    nombre: '',
+    edad: '',
+    profesion: ''
+  }
+
+  const [user, setUser] = useState(valorInicial)
+
+  // Funcion que se encargue de capturar los inputs
+  const capturarInputs = (e) => {
+    const {name, value} = e.target;
+    setUser({...user, [name] : value});
+
+  }
+
+  // Hara peticion al servidor para guardar datos
+  const guardarDatos = async (e) => {
+    e.preventDefault();
+    console.log(user);
+    setUser({...valorInicial})
+  }
+
   return (
     <Row xs={1} md={2} className="g-4">
         <Col> 
@@ -27,14 +51,20 @@ const HomeAdd = ({correoUsuario}) => {
             <div>
               {/* Esta seccion sera el formulario */}
               <h4 className='text-center text-primary'>Ingresar Usuarios</h4>
-              <form>
+              <form onSubmit={guardarDatos}>
                 <div className='card card-body'>
                   <div className='form-group'>
-                    <input type='text' name='nombre' className='form-control mb-3' placeholder='Ingresar el nombre del usuario'/>
-                    <input type='text' name='edad' className='form-control mb-3' placeholder='Ingresar la edad del usuario'/>
-                    <input type='text' name='profesione' className='form-control mb-3' placeholder='Ingresar la profesion del usuario'/>
+                    <input type='text' name='nombre' className='form-control mb-3' placeholder='Ingresar el nombre del usuario'
+                      onChange={capturarInputs} value={user.nombre}
+                    />
+                    <input type='text' name='edad' className='form-control mb-3' placeholder='Ingresar la edad del usuario'
+                      onChange={capturarInputs} value={user.edad}
+                    />
+                    <input type='text' name='profesion' className='form-control mb-3' placeholder='Ingresar la profesion del usuario'
+                      onChange={capturarInputs} value={user.profesion}
+                    />
                   </div>
-                  <Button variant='primary'>
+                  <Button variant='primary' type='submit'>
                     Guardar
                   </Button>
                 </div>
