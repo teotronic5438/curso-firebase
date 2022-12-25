@@ -2,14 +2,31 @@ import React, {useState} from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Datos from '../../Components/Table/Datos';
+import { Button } from 'react-bootstrap';
 
 // Servicios que necesitaremos
 import app from "../../Firebase/FirebaseApp";
 import {getAuth, signOut} from 'firebase/auth';
-import { Button } from 'react-bootstrap';
-import { async } from '@firebase/util';
+
+// funcionalidades de firestore que usaremos
+import {getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc} from 'firebase/firestore';
+/*
+getFirestore: obtener nuestro Firestore, es decir nuestro serivicio
+collection: nuestra bbdd
+addDoc: añadir documentos
+getDocs: para hacer la peticion por get
+doc: hacer una sola peticion a un solo objeto o campo especifico (a un id especifico)
+deleteDoc: eliminar un documento (elimina un registro completo)
+getDoc: para hacer una peticion para un solo documento, su propio id y sus propios campos
+setDoc: vamos a usarlo para la actualizacion de registro
+
+*/
+
 
 const auth = getAuth(app);
+
+// Aqui tambien crearemos una constante db (database)
+const db = getFirestore(app)
 
 const HomeAdd = ({correoUsuario}) => {
 
@@ -32,7 +49,15 @@ const HomeAdd = ({correoUsuario}) => {
   const guardarDatos = async (e) => {
     e.preventDefault();
     console.log(user);
-    setUser({...valorInicial})
+    setUser({...valorInicial});
+    try {
+      // parametros addDoc(coleccion(database_app, nombre_database), {datos que queremos agregar})
+      await addDoc(collection(db, 'usuarios'), {
+        ...user
+      })    
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
