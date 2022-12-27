@@ -62,6 +62,11 @@ const HomeAdd = ({correoUsuario}) => {
     }
   }
 
+  // FUncion para eliminar el usuario
+  const deleteUser = async (id) => {
+    await deleteDoc(doc(db, 'usuarios', id));
+  }
+
   // Funcion para renderizar lista de usuarios
   useEffect(() => {
     const getLista = async () => {
@@ -79,7 +84,7 @@ const HomeAdd = ({correoUsuario}) => {
     }
     getLista();
     console.log(lista);
-  }, [lista]);
+  }, []);
 
   return (
     <Row>
@@ -120,7 +125,9 @@ const HomeAdd = ({correoUsuario}) => {
         <Col xs={7}>
             {/* Esta seccion sera la lista de usuarios */}
             <h4 className='text-center text-success'>Lista de Usuarios</h4>
-            { lista.length > 0 ? <Datos lista={lista} /> : <Alert className='text-center'>No hay datos cargador en la lista</Alert> }
+            { lista.length > 0 
+            ? <Datos lista={lista} deleteUser={deleteUser}/> 
+            : <Alert className='text-center'>No hay datos cargador en la lista</Alert> }
         </Col>
     </Row>
   )
