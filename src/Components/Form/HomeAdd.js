@@ -39,6 +39,7 @@ const HomeAdd = ({correoUsuario}) => {
   // Variables de estado
   const [user, setUser] = useState(valorInicial);
   const [lista, setLista] = useState([]);
+  const [loadData, setLoadData] = useState(false)
 
   // Funcion que se encargue de capturar los inputs
   const capturarInputs = (e) => {
@@ -56,7 +57,8 @@ const HomeAdd = ({correoUsuario}) => {
       // parametros addDoc(coleccion(database_app, nombre_database), {datos que queremos agregar})
       await addDoc(collection(db, 'usuarios'), {
         ...user
-      })    
+      }) 
+      setLoadData(!loadData);   // Aviso que cambia de estado, asi actulizo el useEfect
     } catch (error) {
       console.error(error);
     }
@@ -65,6 +67,7 @@ const HomeAdd = ({correoUsuario}) => {
   // FUncion para eliminar el usuario
   const deleteUser = async (id) => {
     await deleteDoc(doc(db, 'usuarios', id));
+    setLoadData(!loadData);   // Aviso que cambia de estado, asi actulizo el useEfect
   }
 
   // Funcion para renderizar lista de usuarios
@@ -83,8 +86,10 @@ const HomeAdd = ({correoUsuario}) => {
       }
     }
     getLista();
+    
     console.log(lista);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[loadData]);
 
   return (
     <Row>
