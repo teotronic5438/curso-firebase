@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Datos from '../../Components/Table/Datos';
-import { Button } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 
 // Servicios que necesitaremos
 import app from "../../Firebase/FirebaseApp";
@@ -36,7 +36,9 @@ const HomeAdd = ({correoUsuario}) => {
     profesion: ''
   }
 
-  const [user, setUser] = useState(valorInicial)
+  // Variables de estado
+  const [user, setUser] = useState(valorInicial);
+  const [lista, setLista] = useState([]);
 
   // Funcion que se encargue de capturar los inputs
   const capturarInputs = (e) => {
@@ -60,10 +62,29 @@ const HomeAdd = ({correoUsuario}) => {
     }
   }
 
+  // Funcion para renderizar lista de usuarios
+  useEffect(() => {
+    const getLista = async () => {
+      try {
+        // getDocs: traera una coleccion getDocs(collection(db, 'nombre_coleccion'))
+        const querySnapshot = await getDocs(collection(db, 'usuarios'));
+        const docs = [];
+        querySnapshot.forEach(doc => {
+          docs.push({...doc.data(), id: doc.id});   // uno la data y el id
+        });
+        setLista(docs);   // ya tiene toda la informacion que venimos cargando
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    getLista();
+    console.log(lista);
+  }, [lista]);
+
   return (
-    <Row xs={1} md={2} className="g-4">
-        <Col> 
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
+    <Row>
+        <Col xs={5}> 
+            <div>
               {/* Aqui la logica para desloquearse */}
               <p style={{marginTop: '11px', marginBottom: '11px'}}>
                 Bienvenido, <strong>{correoUsuario}</strong> has iniciado sesion
@@ -96,10 +117,10 @@ const HomeAdd = ({correoUsuario}) => {
               </form>
             </div>
         </Col>
-        <Col>
+        <Col xs={7}>
             {/* Esta seccion sera la lista de usuarios */}
             <h4 className='text-center text-success'>Lista de Usuarios</h4>
-            <Datos />
+            { lista.length > 0 ? <Datos lista={lista} /> : <Alert className='text-center'>No hay datos cargador en la lista</Alert> }
         </Col>
     </Row>
   )

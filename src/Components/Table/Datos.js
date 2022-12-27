@@ -2,42 +2,34 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 
-export default function Datos() {
+export default function Datos({lista}) {
+  const filas = lista.map((fila, index) => 
+    <tr key={fila.id}>
+      <td>{index + 1}</td>
+      <td>{fila.nombre}</td>
+      <td>{fila.edad}</td>
+      <td>{fila.profesion}</td>
+      <td><Button variant='success'>Actualizar</Button> &nbsp;&nbsp;<Button variant='danger'>Eliminar</Button></td>
+    </tr>
+  )
   return (
     <div className='my-3'>
-        <Table striped bordered hover>
+        <Table striped bordered hover className='text-center'>
             <thead>
                 <tr>
                 <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Profesion</th>
+                <th>Administrar</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <td>1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                </tr>
-                <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                </tr>
-                <tr>
-                <td>3</td>
-                <td colSpan={2}>Larry the Bird</td>
-                <td>@twitter</td>
-                </tr>
+                {filas}
             </tbody>
         </Table>
         <div className='d-flex justify-content-evenly'>
-          <Button variant='success'>Agregar</Button>
-          <Button variant='warning'>Editar</Button>
-          <Button variant='danger'>Eliminar</Button>
+
         </div>
     </div>
   )
