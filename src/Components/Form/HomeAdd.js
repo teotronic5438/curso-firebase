@@ -39,7 +39,8 @@ const HomeAdd = ({correoUsuario}) => {
   // Variables de estado
   const [user, setUser] = useState(valorInicial);
   const [lista, setLista] = useState([]);
-  const [loadData, setLoadData] = useState(false)
+  const [loadData, setLoadData] = useState(false);
+  const [subId, setSubId] = useState("")
 
   // Funcion que se encargue de capturar los inputs
   const capturarInputs = (e) => {
@@ -49,26 +50,58 @@ const HomeAdd = ({correoUsuario}) => {
   }
 
   // Hara peticion al servidor para guardar datos
+  // Funcion que actualiza y guarda los datos
   const guardarDatos = async (e) => {
     e.preventDefault();
-    console.log(user);
+    // console.log(user);
     setUser({...valorInicial});
-    try {
-      // parametros addDoc(coleccion(database_app, nombre_database), {datos que queremos agregar})
-      await addDoc(collection(db, 'usuarios'), {
-        ...user
-      }) 
+
+    if(subId === ''){
+      try {
+        // parametros addDoc(coleccion(database_app, nombre_database), {datos que queremos agregar})
+        await addDoc(collection(db, 'usuarios'), {
+          ...user
+        }) 
+        setLoadData(!loadData);   // Aviso que cambia de estado, asi actulizo el useEfect
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      await setDoc(doc(db, 'usuarios', subId), {...user});
+      setUser({...valorInicial});
+      setSubId('');
       setLoadData(!loadData);   // Aviso que cambia de estado, asi actulizo el useEfect
-    } catch (error) {
-      console.error(error);
     }
+
+
   }
 
   // FUncion para eliminar el usuario
   const deleteUser = async (id) => {
     await deleteDoc(doc(db, 'usuarios', id));
+    setUser({...valorInicial});
+    setSubId('');
     setLoadData(!loadData);   // Aviso que cambia de estado, asi actulizo el useEfect
   }
+
+  // Funcion para actualizar datos, con peticion de un documento firestore
+  const getOne = async (id) => {
+    try {
+      // Almacena lo que hay en firebase
+      const docRef = doc(db, 'usuarios', id);
+      const docSnap = await getDoc(docRef);
+      setUser(docSnap.data())
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    if(subId !== ''){
+      getOne(subId)
+    }
+  }, [subId]);
+
 
   // Funcion para renderizar lista de usuarios
   useEffect(() => {
@@ -87,7 +120,7 @@ const HomeAdd = ({correoUsuario}) => {
     }
     getLista();
     
-    console.log(lista);
+    // console.log(lista);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[loadData]);
 
@@ -121,7 +154,7 @@ const HomeAdd = ({correoUsuario}) => {
                     />
                   </div>
                   <Button variant='primary' type='submit'>
-                    Guardar
+                    { subId ? 'Actualizar' : 'Guardar' }
                   </Button>
                 </div>
               </form>
@@ -131,7 +164,7 @@ const HomeAdd = ({correoUsuario}) => {
             {/* Esta seccion sera la lista de usuarios */}
             <h4 className='text-center text-success'>Lista de Usuarios</h4>
             { lista.length > 0 
-            ? <Datos lista={lista} deleteUser={deleteUser}/> 
+            ? <Datos lista={lista} deleteUser={deleteUser} setSubId={setSubId}/> 
             : <Alert className='text-center'>No hay datos cargador en la lista</Alert> }
         </Col>
     </Row>
